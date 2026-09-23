@@ -1,0 +1,21 @@
+.backdrop{position:fixed;inset:0;z-index:70;display:grid;place-items:center;padding:18px;background:#02091a80}
+.dialog{position:relative;width:min(430px,100%);padding:27px;border-radius:14px;color:#14213d;background:#fff;box-shadow:0 20px 60px #02091a45;font-family:'DM Sans',Arial,sans-serif}
+.close{position:absolute;top:13px;right:13px;display:grid;place-items:center;width:32px;height:32px;border:0;border-radius:8px;color:#71809a;background:#f6f8fc;font-size:23px;line-height:1;cursor:pointer}
+.dialog>p{margin:0 0 7px;color:#71809a;font-size:10px;font-weight:600;letter-spacing:.1em}
+.dialog h2{margin:0;font-size:22px;letter-spacing:-.6px}
+.dialog>span{display:block;margin-top:9px;color:#71809a;font-size:12px;line-height:1.45}
+.dialog form{display:grid;gap:19px;margin-top:22px}
+.dialog label{display:grid;gap:7px;color:#14213d;font-size:12px;font-weight:600}
+.dialog label small{color:#71809a;font-weight:400}
+.dialog input,.dialog textarea{width:100%;border:1px solid #dce2eb;border-radius:8px;outline:0;color:#14213d;background:#fff;font:13px 'DM Sans'}
+.dialog input{height:44px;padding:0 12px}
+.dialog textarea{min-height:92px;padding:10px 12px;resize:vertical}
+.dialog input:focus,.dialog textarea:focus{border-color:#405cf5;box-shadow:0 0 0 3px #405cf51a}
+.dialog form>div{display:flex;justify-content:flex-end;gap:9px}
+.dialog form button{min-height:42px;padding:0 13px;border:0;border-radius:8px;background:#edf0ff;color:#405cf5;font:600 12px 'DM Sans';cursor:pointer}
+.dialog form button:last-child{color:#fff;background:#405cf5}
+.dialog form button.approved{background:#25854c}
+.dialog form button.declined{background:#b57616}
+.dialog form button.rejected{background:#c74e49}
+.dialog form button:disabled{opacity:.45;cursor:not-allowed}
+@media(max-width:480px){.backdrop{align-items:end;padding:0}.dialog{width:100%;padding:24px 18px calc(24px + env(safe-area-inset-bottom));border-radius:15px 15px 0 0}.dialog h2{font-size:20px}.dialog form>div{display:grid;grid-template-columns:1fr 1.4fr}.dialog form button{padding:0 8px}}
