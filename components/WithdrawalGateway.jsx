@@ -6,6 +6,7 @@ import MobilePortalNav from './MobilePortalNav'
 import PortalLoader from './PortalLoader'
 import SignOutButton from './SignOutButton'
 import styles from './WithdrawalGateway.module.css'
+import MessageNavBadge from './MessageNavBadge'
 
 const methods = [
   { id: 'bank', icon: '⌁', name: 'Bank transfer', detail: '1–3 business days' },
@@ -68,7 +69,7 @@ export default function WithdrawalGateway() {
   function toggleTheme() { setDark((current) => { const next = !current; window.localStorage.setItem('grantwell-user-theme', next ? 'dark' : 'light'); return next }) }
 
   return <main className={`${styles.page} ${dark ? styles.dark : ''}`}>
-    <aside className={styles.sidebar}><Link href="/user" className={styles.brand}><i>G</i> Grantwell</Link><p>MY FUNDING</p><nav aria-label="Borrower navigation">{[['Home', '/user', '⌂'], ['Applications', '/user/applications', '▤'], ['My loan', '/user/loan', '$'], ['Payments', '/user/payments', '◷'], ['Messages', '/user/messages', '✉']].map(([label, href, icon]) => <Link key={href} href={href} className={href === '/user/payments' ? styles.active : ''}><span>{icon}</span>{label}</Link>)}</nav><div className={styles.profile}><i>{account.user.firstName[0]}{account.user.lastName[0]}</i><div><b>{account.user.firstName} {account.user.lastName}</b><small>{account.application?.application?.category || 'Applicant'}</small></div></div><SignOutButton className={styles.signout} compact /></aside>
+    <aside className={styles.sidebar}><Link href="/user" className={styles.brand}><i>G</i> Grantwell</Link><p>MY FUNDING</p><nav aria-label="Borrower navigation">{[['Home', '/user', '⌂'], ['Applications', '/user/applications', '▤'], ['My loan', '/user/loan', '$'], ['Payments', '/user/payments', '◷'], ['Messages', '/user/messages', '✉']].map(([label, href, icon]) => <Link key={href} href={href} className={href === '/user/payments' ? styles.active : ''}><span>{icon}</span>{label}{label === 'Messages' && <MessageNavBadge />}</Link>)}</nav><div className={styles.profile}><i>{account.user.firstName[0]}{account.user.lastName[0]}</i><div><b>{account.user.firstName} {account.user.lastName}</b><small>{account.application?.application?.category || 'Applicant'}</small></div></div><SignOutButton className={styles.signout} compact /></aside>
     <section className={styles.content}>
       <header className={styles.topbar}><div><p>MY FUNDING / WITHDRAWAL</p><h1>Withdraw your funds</h1></div><button type="button" onClick={toggleTheme} aria-pressed={dark}>{dark ? '☀ Light' : '☾ Dark'}</button></header>
       <section className={styles.hero}><div><p>SECURE WITHDRAWAL GATEWAY</p><h2>{hasOpenRequest ? `Your withdrawal request is ${withdrawal.status.toLowerCase()}.` : available ? 'Choose how you’d like to receive your funding.' : 'Your funds will be available here once they are credited.'}</h2><span>{hasOpenRequest ? 'Only one withdrawal request can be active at a time.' : available ? 'Select a method and send a withdrawal request.' : 'Need an update on your funding? Our team can help in Messages.'}</span></div><Link href="/user/messages">Chat with an agent <b>→</b></Link></section>

@@ -6,6 +6,7 @@ import MobilePortalNav from './MobilePortalNav'
 import SignOutButton from './SignOutButton'
 import styles from './ReviewQueue.module.css'
 import dialogStyles from './ReviewQueueDialog.module.css'
+import MessageNavBadge from './MessageNavBadge'
 
 export default function ReviewQueue() {
   const [applicants, setApplicants] = useState([])
@@ -79,7 +80,7 @@ export default function ReviewQueue() {
     <aside className="admin-sidebar">
       <Link href="/admin" className="admin-brand"><span>G</span> Grantwell</Link>
       <p className="admin-workspace">OWNER WORKSPACE</p>
-      <nav className="admin-nav" aria-label="Admin navigation">{[['Overview', '/admin', '⌘'], ['Applications', '/admin/applications', '▤'], ['Withdrawals', '/admin/withdrawals', '↗'], ['Messages', '/admin/messages', '✉'], ['Credit user', '/admin/credit-user', '+'], ['Debit user', '/admin/debit-user', '−']].map(([label, href, icon]) => <Link key={href} href={href} className={href === '/admin/applications' ? 'active' : ''}><span className="admin-icon">{icon}</span>{label}{label === 'Applications' && <b>{awaitingReview}</b>}</Link>)}</nav>
+      <nav className="admin-nav" aria-label="Admin navigation">{[['Overview', '/admin', '⌘'], ['Applications', '/admin/applications', '▤'], ['Withdrawals', '/admin/withdrawals', '↗'], ['Messages', '/admin/messages', '✉'], ['Credit user', '/admin/credit-user', '+'], ['Debit user', '/admin/debit-user', '−']].map(([label, href, icon]) => <Link key={href} href={href} className={href === '/admin/applications' ? 'active' : ''}><span className="admin-icon">{icon}</span>{label}{label === 'Applications' && <b>{awaitingReview}</b>}{label === 'Messages' && <MessageNavBadge />}</Link>)}</nav>
       <div className="admin-sidebar-bottom"><Link href="/admin/settings"><span className="admin-icon">⚙</span>Settings</Link><div className="owner-card"><span>AM</span><div><strong>Admin</strong><small>Site owner</small></div><i>⌄</i></div><SignOutButton className="admin-signout" compact redirectTo="/admin/login" /></div>
     </aside>
     <section className="admin-content">
