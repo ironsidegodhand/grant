@@ -5,6 +5,7 @@ import Link from 'next/link'
 import './admin.css'
 import MobilePortalNav from '../../../components/MobilePortalNav'
 import SignOutButton from '../../../components/SignOutButton'
+import MessageNavBadge from '../../../components/MessageNavBadge'
 
 const emptyDashboard = { metrics: { accountBalance: 0, approved: 0, awaitingReview: 0, adjustments: 0 }, pipeline: { submitted: 0, approved: 0, declined: 0 }, monthlyApplications: [], applications: [] }
 const currency = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 })
@@ -42,7 +43,7 @@ export default function AdminDashboard() {
             ['Overview', '/admin', '⌘'], ['Applications', '/admin/applications', '▤'], ['Withdrawals', '/admin/withdrawals', '↗'], ['Messages', '/admin/messages', '✉'], ['Credit user', '/admin/credit-user', '+'], ['Debit user', '/admin/debit-user', '−'],
           ].map(([label, href, icon]) => (
             <Link key={label} href={href} className={label === 'Overview' ? 'active' : ''}>
-              <Icon>{icon}</Icon>{label}{label === 'Applications' && <b>{dashboard.metrics.awaitingReview}</b>}
+              <Icon>{icon}</Icon>{label}{label === 'Applications' && <b>{dashboard.metrics.awaitingReview}</b>}{label === 'Messages' && <MessageNavBadge />}
             </Link>
           ))}
         </nav>

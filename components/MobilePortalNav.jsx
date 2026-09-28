@@ -5,6 +5,7 @@ import { usePathname } from 'next/navigation'
 import { useState } from 'react'
 import styles from './MobilePortalNav.module.css'
 import SignOutButton from './SignOutButton'
+import { useMessageInboxContext } from './MessageInboxProvider'
 
 const linksByRole = {
   admin: [
@@ -22,9 +23,11 @@ function isActive(pathname, href) {
     || (href === '/user/payments' && pathname === '/user/make-payment')
 }
 
-export default function MobilePortalNav({ role, breakpoint = '680', user, category }) {
+export default function MobilePortalNav({ role, breakpoint = '680', user, category, unread = 0 }) {
   const pathname = usePathname()
   const [isOpen, setIsOpen] = useState(false)
+  const inbox = useMessageInboxContext()
+  const unreadMessages = inbox.unread || unread
   const visibilityClass = breakpoint === '600' ? styles.at600 : breakpoint === '620' ? styles.at620 : ''
   const workspace = role === 'admin' ? 'OWNER WORKSPACE' : 'MY FUNDING'
   const profile = role === 'admin'
@@ -39,7 +42,7 @@ export default function MobilePortalNav({ role, breakpoint = '680', user, catego
     <nav className={styles.drawer} aria-label={`${role === 'admin' ? 'Admin' : 'Borrower'} navigation`} aria-hidden={!isOpen}>
       <div className={styles.drawerTop}><Link href={role === 'admin' ? '/admin' : '/user'} className={styles.brand} onClick={() => setIsOpen(false)}><i>G</i> Grantwell</Link><button type="button" onClick={() => setIsOpen(false)} aria-label="Close navigation menu">×</button></div>
       <p className={styles.workspace}>{workspace}</p>
-      <div className={styles.links}>{linksByRole[role].map(([label, href, icon]) => <Link key={href} href={href} className={isActive(pathname, href) ? styles.active : ''} aria-current={isActive(pathname, href) ? 'page' : undefined} onClick={() => setIsOpen(false)}><i>{icon}</i>{label}</Link>)}</div>
+      <div className={styles.links}>{linksByRole[role].map(([label, href, icon]) => <Link key={href} href={href} className={isActive(pathname, href) ? styles.active : ''} aria-current={isActive(pathname, href) ? 'page' : undefined} onClick={() => setIsOpen(false)}><i>{icon}</i>{label}{label === 'Messages' && unreadMessages > 0 && <b className={styles.badge}>{unreadMessages > 99 ? '99+' : unreadMessages}</b>}</Link>)}</div>
       <div className={styles.profile}><i>{profile[0]}</i><div><b>{profile[1]}</b><small>{profile[2]}</small></div></div><SignOutButton className={styles.signOut} redirectTo={role === 'admin' ? '/admin/login' : '/login'} />
     </nav>
   </div>

@@ -7,6 +7,7 @@ import styles from './PortalPage.module.css'
 import MobilePortalNav from './MobilePortalNav'
 import PortalLoader from './PortalLoader'
 import SignOutButton from './SignOutButton'
+import { useMessageInboxContext } from './MessageInboxProvider'
 
 const adminLinks = [
   ['Overview', '/admin', '⌘'], ['Applications', '/admin/applications', '▤'], ['Withdrawals', '/admin/withdrawals', '↗'], ['Messages', '/admin/messages', '✉'], ['Credit user', '/admin/credit-user', '+'], ['Debit user', '/admin/debit-user', '−'], ['Settings', '/admin/settings', '⚙'],
@@ -27,6 +28,7 @@ export default function PortalPage({ role, eyebrow, title, description, action =
   const [dark, setDark] = useState(false)
   const [account, setAccount] = useState(null)
   const isAdmin = role === 'admin'
+  const { unread } = useMessageInboxContext()
   const links = isAdmin ? adminLinks : userLinks
   const brand = isAdmin ? 'Owner workspace' : 'My funding'
   const destination = actionHref || actionRoutes[action]
@@ -63,7 +65,7 @@ export default function PortalPage({ role, eyebrow, title, description, action =
       <Link href={isAdmin ? '/admin' : '/user'} className={styles.brand}><i>G</i> Grantwell</Link>
       <p>{brand}</p>
       <nav aria-label={`${isAdmin ? 'Admin' : 'Borrower'} navigation`}>
-        {links.map(([label, href, icon]) => <Link key={href} href={href} className={pathname === href ? styles.active : ''}><span>{icon}</span>{label}</Link>)}
+        {links.map(([label, href, icon]) => <Link key={href} href={href} className={pathname === href ? styles.active : ''}><span>{icon}</span>{label}{label === 'Messages' && unread > 0 && <b className={styles.messageBadge}>{unread > 99 ? '99+' : unread}</b>}</Link>)}
       </nav>
       <div className={styles.profile}><i>{isAdmin ? 'AM' : account ? `${account.user.firstName[0]}${account.user.lastName[0]}` : '…'}</i><div><b>{isAdmin ? 'Alex Morgan' : account ? `${account.user.firstName} ${account.user.lastName}` : 'Loading…'}</b><small>{isAdmin ? 'Site owner' : account?.application?.application?.category || 'Applicant'}</small></div></div><SignOutButton className={styles.signOut} compact redirectTo={isAdmin ? '/admin/login' : '/login'} />
     </aside>
@@ -73,6 +75,6 @@ export default function PortalPage({ role, eyebrow, title, description, action =
       {displayedMetrics.length > 0 && <section className={styles.metrics}>{displayedMetrics.map(([label, value, detail], index) => <article key={label} style={{ '--delay': `${index * 70}ms` }}><span>{label}</span><strong>{value}</strong><small>{detail}</small></article>)}</section>}
       <section className={styles.cards}>{displayedCards.map(([heading, text, items], index) => <article key={heading} className={heading === 'Review timeline' && applicationState ? styles[`timeline${applicationState[0].toUpperCase()}${applicationState.slice(1)}`] : ''} style={{ '--delay': `${index * 80}ms` }}><div className={styles.cardHeading}><div><p>ACCOUNT CENTER</p><h2>{heading}</h2></div><button type="button">View all →</button></div><p className={styles.cardText}>{text}</p><ul>{items.map((item) => <li key={item[0]}><i>{item[0]}</i><span><b>{item[1]}</b><small>{item[2]}</small></span><button type="button">→</button></li>)}</ul></article>)}</section>
     </section>
-    <MobilePortalNav role={role} breakpoint="600" user={account?.user} category={applicationData.category} />
+    <MobilePortalNav role={role} breakpoint="600" user={account?.user} category={applicationData.category} unread={unread} />
   </main>
 }

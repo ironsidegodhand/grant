@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import styles from './AccountAdjustment.module.css'
 import MobilePortalNav from './MobilePortalNav'
+import MessageNavBadge from './MessageNavBadge'
 
 const navLinks = [
   ['Overview', '/admin', '⌘'],
@@ -65,7 +66,7 @@ export default function AccountAdjustment({ type }) {
       <Link href="/admin" className={styles.brand}><i>G</i> Grantwell</Link>
       <p>OWNER WORKSPACE</p>
       <nav aria-label="Admin navigation">
-        {navLinks.map(([label, href, icon]) => <Link key={href} href={href} className={href === (isCredit ? '/admin/credit-user' : '/admin/debit-user') ? styles.active : ''}><span>{icon}</span>{label}</Link>)}
+        {navLinks.map(([label, href, icon]) => <Link key={href} href={href} className={href === (isCredit ? '/admin/credit-user' : '/admin/debit-user') ? styles.active : ''}><span>{icon}</span>{label}{label === 'Messages' && <MessageNavBadge />}</Link>)}
       </nav>
       <Link className={styles.settings} href="/admin/settings"><span>⚙</span>Settings</Link>
       <div className={styles.profile}><i>AM</i><div><b>Alex Morgan</b><small>Site owner</small></div></div>

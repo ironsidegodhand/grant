@@ -1,4 +1,5 @@
 import './user.css'
+import { MessageInboxProvider } from '../../../components/MessageInboxProvider'
 
 export const metadata = {
   title: 'Grantwell | Borrower portal',
@@ -6,5 +7,5 @@ export const metadata = {
 }
 
 export default function UserLayout({ children }) {
-  return children
+  return <MessageInboxProvider role="user">{children}</MessageInboxProvider>
 }

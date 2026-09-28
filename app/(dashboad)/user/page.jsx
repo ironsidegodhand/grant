@@ -5,6 +5,7 @@ import Link from 'next/link'
 import MobilePortalNav from '../../../components/MobilePortalNav'
 import PortalLoader from '../../../components/PortalLoader'
 import SignOutButton from '../../../components/SignOutButton'
+import MessageNavBadge from '../../../components/MessageNavBadge'
 
 function Detail({ label, value }) { return <div className="application-detail"><span>{label}</span><strong>{value || '—'}</strong></div> }
 
@@ -57,7 +58,7 @@ export default function UserDashboard() {
   return <main className={`user-dashboard ${dark ? 'user-dark' : ''} ${isApproved ? 'application-approved' : ''} ${isCredited ? 'account-credited' : ''}`}>
     <aside className="user-sidebar">
       <Link href="/user" className="user-brand"><span>G</span> Grantwell</Link><p>MY FUNDING</p>
-      <nav aria-label="Borrower portal navigation">{[['Home', '/user', '⌂'], ['My applications', '/user/applications', '▤'], ['My loan', '/user/loan', '$'], ['Payments', '/user/payments', '◷'], ['Messages', '/user/messages', '✉']].map(([label, href, icon]) => <Link key={label} href={href} className={label === 'Home' ? 'active' : ''}><span className="user-icon">{icon}</span>{label}</Link>)}</nav>
+      <nav aria-label="Borrower portal navigation">{[['Home', '/user', '⌂'], ['My applications', '/user/applications', '▤'], ['My loan', '/user/loan', '$'], ['Payments', '/user/payments', '◷'], ['Messages', '/user/messages', '✉']].map(([label, href, icon]) => <Link key={label} href={href} className={label === 'Home' ? 'active' : ''}><span className="user-icon">{icon}</span>{label}{label === 'Messages' && <MessageNavBadge />}</Link>)}</nav>
       <div className="user-profile"><span>{user.firstName[0]}{user.lastName[0]}</span><div><strong>{user.firstName} {user.lastName}</strong><small>{data.category || 'Applicant'}</small></div></div>
       <SignOutButton className="user-signout" compact />
     </aside>
