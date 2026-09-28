@@ -5,6 +5,7 @@ import { COOKIE_NAME, readSession } from '../../../lib/auth'
 import { isAdminRequest } from '../../../lib/admin-api'
 import User from '../../../models/User'
 import Message from '../../../models/Message'
+import { sendAdminMessageNotification, sendUserSupportReplyEmail } from '../../../lib/mailer'
 
 const noStore = { 'Cache-Control': 'no-store, private' }
 const serialize = (message) => ({ id: message._id.toString(), sender: message.sender, text: message.text, createdAt: message.createdAt, deliveredAt: message.deliveredAt })
@@ -74,8 +75,16 @@ export async function POST(request) {
     const userId = admin ? body.userId : userSession.sub
     if (!text || text.length > 2000 || !mongoose.isValidObjectId(userId)) return NextResponse.json({ error: 'Enter a message up to 2,000 characters.' }, { status: 400, headers: noStore })
     await connectDb()
-    if (admin && !await User.exists({ _id: userId })) return NextResponse.json({ error: 'Conversation not found.' }, { status: 404, headers: noStore })
+    const conversationUser = await User.findById(userId).select('firstName lastName email').lean()
+    if (!conversationUser) return NextResponse.json({ error: 'Conversation not found.' }, { status: 404, headers: noStore })
     const message = await Message.create({ user: userId, sender: admin ? 'admin' : 'user', text })
+    const senderName = `${conversationUser.firstName} ${conversationUser.lastName}`.trim()
+    try {
+      if (admin) await sendUserSupportReplyEmail({ email: conversationUser.email, firstName: conversationUser.firstName, text })
+      else await sendAdminMessageNotification({ senderName, senderEmail: conversationUser.email, text })
+    } catch (error) {
+      console.error('Message email notification failed:', error)
+    }
     return NextResponse.json({ message: serialize(message) }, { status: 201, headers: noStore })
   } catch (error) {
     console.error('Message send failed:', error)
